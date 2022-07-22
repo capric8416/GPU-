@@ -5,7 +5,7 @@ param(
     [Int32]$interval   # 执行一次查询后等待的秒数
 )
 
-# 每秒输出一次，实际上间隔可能大于1秒
+# 如果interval参数值过小，实际上间隔可能大于指定的秒数
 $p = Get-Process $process
 
 $engtype = ".*_(engtype.*)\)\\(.*)"
@@ -73,7 +73,7 @@ while ($true) {
 
     Write-Output ""
 
-    # 等待一秒
+    # 等待若干秒
     Start-Sleep -Seconds $interval
 }
 
