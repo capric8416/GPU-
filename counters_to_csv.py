@@ -9,22 +9,16 @@ header = [
     'time',
     'cpu percentage (%)',
     'memory usage (MB)',
-    'gpu engtype_copy running time (ms)',
-    'gpu engtype_3d running time (ms)',
-    'gpu engtype_videodecode utilization percentage (%)',
     'gpu engtype_3d utilization percentage (%)',
-    'gpu engtype_videodecode running time (ms)',
-    'gpu engtype_copy utilization percentage (%)',
-    'gpu process memory non local usage (MB)',
+    'gpu engtype_videodecode utilization percentage (%)',
     'gpu process memory local usage (MB)',
-    'gpu process memory total committed (MB)',
     'gpu process memory dedicated usage (MB)',
     'gpu process memory shared usage (MB)',
 ]
 
 
-def convert(file_path, date_time):
-    with open(file=file_path + '.csv', mode='w', encoding='utf-8') as fp_csv:
+def convert(file_path, date_time=''):
+    with open(file=file_path + '.csv', mode='w', encoding='utf-8', newline='') as fp_csv:
         csv_writer = csv.writer(fp_csv)
 
         # 逐行处理比较复杂，因为会有字段缺失，所以直接加载进内存
@@ -69,12 +63,13 @@ def convert(file_path, date_time):
 
             if current_row:     
                 csv_writer.writerow(current_row)
-                previous_row = current_row
+                # previous_row = current_row
 
 
 if __name__ == '__main__':
     """
     python counters_to_csv.py --file_path='MpvHelperApp.counters' --date_time='2022-08-12 12:10:39.162'
     """
-    fire.Fire(convert)
     # convert(file_path='MpvHelperApp.counters', date_time='2022-08-12 12:10:39.162')
+    # convert(file_path='mpv.counters')
+    fire.Fire(convert)
