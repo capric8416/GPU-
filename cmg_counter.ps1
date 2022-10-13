@@ -29,7 +29,7 @@ while ($true) {
     }
 
     # 记录任务开始时间
-    $time = [string]::Format('"time": "{0}"', $(Get-Date -Format "yyyy-MM-dd HH:mm:ss.fff"))
+    $time = [string]::Format('"counter": "time", "value": 0, "text": "{0}"', $(Get-Date -Format "yyyy-MM-dd HH:mm:ss.fff"))
     Write-Output "{$time}"
 
     # CPU占用
@@ -59,6 +59,7 @@ while ($true) {
             $p | ForEach-Object {
                 (Get-Counter "\$($counterSet)(pid_$($_.id)*engtype*)\*").CounterSamples  | Where-Object CookedValue  | ForEach-Object {
                     $k = $_.Path -replace $engtype, '$1 $2'
+
                     $k = "gpu " + $k
                     if (!$kv.ContainsKey($k)) {
                         $kv[$k] = 0
@@ -74,6 +75,7 @@ while ($true) {
                     (Get-Counter "\$($counterSet)(pid_$($_.id)*)\*").CounterSamples | Where-Object CookedValue
                 ) | ForEach-Object {
                     $k = $_.Path -replace $memorytype, '$1 $2'
+
                     if (!$kv.ContainsKey($k)) {
                         $kv[$k] = 0
                     }
@@ -84,6 +86,16 @@ while ($true) {
         
         # 格式化输出每个GPU Unit的使用或者占用情况
         $kv.GetEnumerator() | ForEach-Object {
+            # 过滤total committed
+            if ($_.Key -match "total committed") {
+                continue
+            }
+
+            # 过滤running time
+            if ($_.Key -match "running time") {
+                continue
+            }
+
             $readability = ""
             if ($_.Key -match "engtype") {
                 # percentage
