@@ -11,4 +11,4 @@ public:
     NetReceivedPerfCounters();
 
     virtual long Get();
-}
+};
