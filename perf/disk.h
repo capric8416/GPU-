@@ -11,4 +11,4 @@ public:
     DiskWritePerfCounters();
 
     virtual long Get();
-}
+};
